@@ -32,6 +32,8 @@
     }
 
     .center {
+        padding-top: 10px;
+        text-align: center;
         position: absolute;
         top: 50%;
         left: 50%;
@@ -80,6 +82,7 @@
         content: '';
         display: inline-block;
         height: 100%;
+        width: auto;
         vertical-align: middle;
         margin-right: -4px;
     }
@@ -103,9 +106,10 @@
 
 <body>
     <div class="center" id="textInput">
+        <img src="img\logo.jpg">
         <h1>คำนวณการติดตั้ง Solar Cell</h1>
         <form class="form-inline" onsubmit="getValue()" id="myForm">
-            <div class="form-group col-lg-12">
+            <div class="form-group">
                 <label id="textExp" for="electricCharge">ค่าไฟต่อเดือน</label>
                 <input type="text" required class="form-control" id="electricCharge"
                     placeholder="ระบุค่าใช้จ่ายไฟฟ้าต่อเดือน"
@@ -113,7 +117,7 @@
             </div>
             &nbsp;
 
-            <div class="form-group col-lg-12">
+            <div class="form-group">
                 <label id="textExp" for="electricCharge">อัตราส่วนการใช้งานไฟฟ้าในตอนกลางวัน</label>
                 <input type="text" required class="form-control" id="electricPercentage"
                     placeholder="ระบุเปอร์เซนต์การใช้งานไฟฟ้าในตอนกลางวัน"
@@ -121,26 +125,29 @@
             </div>
             &nbsp;
 
-            <div class="form-group col-lg-12">
+            <div class="form-group">
                 <label id="textExp" required for="electricUnit">หน่วยค่าไฟ/บาท</label>
                 <input type="text" class="form-control" id="electricUnit" placeholder="ระบุเปอร์หน่วยค่าไฟ/บาท"
                     oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />
             </div>
-            &nbsp;
-            &nbsp;
+            &nbsp;&nbsp;
 
-            <div class="box-position col-lg-12">
+            <div class="box-position">
                 <div class="d-flex justify-content-center">
                     <input id="button_calculate" type="submit" class="btn btn-primary btn-primary-spacing"
                         value="คำนวณ">
                 </div>
             </div>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+
+            <footer>บริษัท เทรดดิ้งเทค จำกัด ที่อยู่ 1/187 ซอยลาดพร้าว 101 (ซอย 53)</footer>
+            <footer>แขวงคลองจั่น เขตบางกะปิ กรุงเทพมหานคร 10240</footer>
         </form>
     </div>
 
     <div class="modal fade" tabindex="-1" role="dialog" id="myModal">
         <div class="modal-dialog" role="document">
-            <div class="modal-content col-lg-12">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">ผลการคำนวณการติดตั้ง Solar Cell</h4>
                 </div>
@@ -159,39 +166,45 @@
 </body>
 
 <script type="text/javascript">
+    var strResponse;
+
     function getValue() {
         var charge = document.getElementById("electricCharge").value;
         var percent = document.getElementById("electricPercentage").value;
         var unit = document.getElementById("electricUnit").value;
         calculate(charge, percent, unit);
-
     }
 
     function calculate(charge, percent, unit) {
         console.log("ELECTRIC CHARGE: ", charge);
         console.log("DAY PERCENTAGE: ", percent);
         console.log("ELECTRIC UNIT", unit);
-        var kwp = parseFloat(((((parseInt(charge) / 2) / 30) / unit))).toFixed(2);
-        var dayPaid = ((parseInt(charge) * parseInt(percent) / parseInt(100)))
+        var kwp = parseFloat(((((parseInt(charge) / 2) / 30) / unit))).toFixed(2); // charge / 400
+        var dayPaid = ((parseInt(charge) * 400 / parseInt(100)))
         var dayElec = (parseInt(charge) * percent) / 100;
         var dayPaid = calPerDay(kwp);
 
-        //append text
-        var strResponse = "<h5>เสียค่าไฟฟ้าเดือนละ " + charge + " บาท </h5>" +
+        //append text  
+        strResponse = "<h5>จ่ายค่าไฟฟ้าเดือนละ " + charge + " บาท </h5>" +
             "<h5>สัดส่วนการใช้ไฟฟ้าในเวลากลางวัน " + percent + " % ของค่าไฟฟ้า </h5>" +
             "<h5>การใช้ไฟฟ้าเฉพาะกลางวันเท่ากับ " + dayElec + " บาท</h5>" +
-            "<h5>ประมาณการว่าเสียค่าไฟฟ้าหน่วยละ " + unit + " บาท </h5>" +
-            "<h5>ท่านใช้เวลากลางวันเท่ากับ " + Math.round(kwp) + " หน่วย/วัน </h5>" +
+            "<h5>ประมาณการว่าจ่ายค่าไฟฟ้าหน่วยละ " + unit + " บาท </h5>" +
+            "<h5>ท่านใช้ไฟฟ้ากลางวันเท่ากับ " + Math.round(kwp) + " หน่วย/วัน </h5>" +
             "<h5>ประเทศไทยมีค่าพลังงานแสงอาทิตย์เฉลี่ยรายปีเท่ากับ</h5>" +
-            "<h5>4.83 kWh/m<sup>2</sup>-day หรือเทียบได้กับ 4.83 ชั่วโมง/วัน</h5>&nbsp;" +
-            "<h5>ดังนั้น ขนาดที่เหมาะสมในการติดตั้ง</h5>" +
-            "<h1>" + dayPaid + " kWp (กิโลวัตต์พีค)</h1>" +
-            "<h5>และใช้พื้นที่ติดตั้งประมาณ</h4>" +
-            "<h1>" + (dayPaid) * 7 + " ตารางเมตร</h1>";
+            "<h5>4.83 kWh/m<sup>2</sup>-day หรือเทียบได้กับ 4.83 ชั่วโมง/วัน</h5>" + "<br>" +
+            "<h5 style=text-align:left;float:left;>ดังนั้น ขนาดที่เหมาะสมในการติดตั้ง </h5>" +
+            "<h5 style=text-align:right;float:right;><b>" + dayPaid + "</b> kWp (กิโลวัตต์พีค)</h5>" +
+            "<h5 style=text-align:left;float:left;>และใช้พื้นที่ติดตั้งประมาณ</h5>" +
+            "<h5 style=text-align:right;float:right;><b>" + (dayPaid) * 7 + "</b> ตารางเมตร</h5>" +
+            "<h5 style=text-align:left;float:left;>กำลังไฟฟ้าที่ผลิตได้ต่อเดือนโดยประมาณ </h5>" +
+            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas(Math.round(calPerMonth(kwp))) + "</b>  kWh</h5>" +
+            "<h5 style=text-align:left;float:left;>คิดเป็นค่าไฟ </h5>" +
+            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas((calPerMonth(kwp) * unit).toFixed(2)) + "</b>  บาท</h5>" +
+            "<h5 style=text-align:left;float:left;>กำลังไฟฟ้าที่ผลิตได้ต่อปีโดยประมาณ </h5>" +
+            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas(Math.round(calPerYear(kwp))) + "</b>  kWh</h5>" + calPrice(dayPaid)
 
         console.log(strResponse)
         $('#modal-body').html(strResponse);
-
     }
 
     function calPerDay(kwp) {
@@ -217,6 +230,34 @@
         }
 
         return elecPerDay;
+    }
+
+    function calPerMonth(kwp) {
+        return kwp * 4.8 * 0.8 * 30;
+    }
+
+    function calPerYear(kwp) {
+        return ((kwp * 4.8 * 0.8 * 30) * 12);
+    }
+
+    function calPrice(dayPaid) {
+        if (dayPaid > 0 && dayPaid <= 3) {
+            return "<br><h5 style=text-align:left;float:left;>ราคาสำหรับกำลังการผลิต 3 kW (ไฟ 1 เฟส) </h5>" +
+                "<h5 style=text-align:right;float:right;><b>145,000</b>  บาท</h5>";
+        }
+        else if (dayPaid > 3 && dayPaid <= 5) {
+            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 5 kW (ไฟ 1 เฟส)</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + "200,000" + "</b>  บาท</h5>" +
+                "<h5 style=text-align:left;float:left;>กำลังการผลิต 5 kW (ไฟ 3 เฟส)</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + "220,000" + "</b>  บาท</h5>";
+        }
+        else {
+            return "";
+        }
+    }
+
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
     $("#myForm").submit(function (event) {
