@@ -126,8 +126,8 @@
             &nbsp;
 
             <div class="form-group">
-                <label id="textExp" required for="electricUnit">หน่วยค่าไฟ/บาท</label>
-                <input type="text" class="form-control" id="electricUnit" placeholder="ระบุเปอร์หน่วยค่าไฟ/บาท"
+                <label id="textExp" for="electricUnit">หน่วยค่าไฟ/บาท</label>
+                <input type="text" required class="form-control" id="electricUnit" placeholder="ระบุหน่วยค่าไฟ/บาท"
                     oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />
             </div>
             &nbsp;&nbsp;
@@ -179,32 +179,95 @@
         console.log("ELECTRIC CHARGE: ", charge);
         console.log("DAY PERCENTAGE: ", percent);
         console.log("ELECTRIC UNIT", unit);
-        var kwp = parseFloat(((((parseInt(charge) / 2) / 30) / unit))).toFixed(2); // charge / 400
-        var dayPaid = ((parseInt(charge) * 400 / parseInt(100)))
+        var dayUnit = ((((parseInt(charge) / 30) * percent) / 100) / 4).toFixed(2); // charge / 400
         var dayElec = (parseInt(charge) * percent) / 100;
-        var dayPaid = calPerDay(kwp);
+        var powerUnit = calPerDay(dayUnit);
+        powerUnit = calibratePower(powerUnit);
 
         //append text  
-        strResponse = "<h5>จ่ายค่าไฟฟ้าเดือนละ " + charge + " บาท </h5>" +
-            "<h5>สัดส่วนการใช้ไฟฟ้าในเวลากลางวัน " + percent + " % ของค่าไฟฟ้า </h5>" +
-            "<h5>การใช้ไฟฟ้าเฉพาะกลางวันเท่ากับ " + dayElec + " บาท</h5>" +
+        strResponse = "<h5>จ่ายค่าไฟฟ้า " + numberWithCommas(charge) + " บาท/เดือน </h5>" +
+            "<h5>สัดส่วนการใช้ไฟฟ้าในเวลากลางวัน " + percent + "% ของค่าไฟฟ้า </h5>" +
+            "<h5>การใช้ไฟฟ้าเฉพาะกลางวันเท่ากับ " + numberWithCommas(dayElec) + " บาท/เดือน</h5>" +
             "<h5>ประมาณการว่าจ่ายค่าไฟฟ้าหน่วยละ " + unit + " บาท </h5>" +
-            "<h5>ท่านใช้ไฟฟ้ากลางวันเท่ากับ " + Math.round(kwp) + " หน่วย/วัน </h5>" +
+            "<h5>ท่านใช้ไฟฟ้ากลางวันคิดเป็น " + numberWithCommas(Math.round(dayUnit)) + " หน่วย คิดเป็น " + numberWithCommas(Math.round(dayUnit) * 4) + " บาท </h5>" +
             "<h5>ประเทศไทยมีค่าพลังงานแสงอาทิตย์เฉลี่ยรายปีเท่ากับ</h5>" +
             "<h5>4.83 kWh/m<sup>2</sup>-day หรือเทียบได้กับ 4.83 ชั่วโมง/วัน</h5>" + "<br>" +
             "<h5 style=text-align:left;float:left;>ดังนั้น ขนาดที่เหมาะสมในการติดตั้ง </h5>" +
-            "<h5 style=text-align:right;float:right;><b>" + dayPaid + "</b> kWp (กิโลวัตต์พีค)</h5>" +
+            "<h5 style=text-align:right;float:right;><b>" + powerUnit + "</b> kWp (กิโลวัตต์พีค)</h5>" +
             "<h5 style=text-align:left;float:left;>และใช้พื้นที่ติดตั้งประมาณ</h5>" +
-            "<h5 style=text-align:right;float:right;><b>" + (dayPaid) * 7 + "</b> ตารางเมตร</h5>" +
+            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas((powerUnit) * 7) + "</b> ตารางเมตร</h5>" +
             "<h5 style=text-align:left;float:left;>กำลังไฟฟ้าที่ผลิตได้ต่อเดือนโดยประมาณ </h5>" +
-            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas(Math.round(calPerMonth(kwp))) + "</b>  kWh</h5>" +
+            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas(Math.round(calPerMonth(dayUnit))) + "</b>  kWh</h5>" +
             "<h5 style=text-align:left;float:left;>คิดเป็นค่าไฟ </h5>" +
-            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas((calPerMonth(kwp) * unit).toFixed(2)) + "</b>  บาท</h5>" +
+            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas((calPerMonth(dayUnit) * unit).toFixed(2)) + "</b>  บาท</h5>" +
             "<h5 style=text-align:left;float:left;>กำลังไฟฟ้าที่ผลิตได้ต่อปีโดยประมาณ </h5>" +
-            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas(Math.round(calPerYear(kwp))) + "</b>  kWh</h5>" + calPrice(dayPaid)
+            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas(Math.round(calPerYear(dayUnit))) + "</b>  kWh</h5>" + calPrice(powerUnit) + calPayback(powerUnit, dayUnit)
 
         console.log(strResponse)
         $('#modal-body').html(strResponse);
+    }
+
+    function calibratePower(dayPaid) {
+        if (dayPaid > 0 && dayPaid <= 3) {
+            return 3;
+        }
+        else if (dayPaid > 3 && dayPaid <= 5) {
+            return 5;
+        }
+        else if (dayPaid > 5 && dayPaid <= 10) {
+            return 10;
+        }
+        else if (dayPaid > 10 && dayPaid <= 12) {
+            return 12;
+        }
+        else if (dayPaid > 12 && dayPaid <= 15) {
+            return 15;
+        }
+        else if (dayPaid > 15 && dayPaid <= 20) {
+            return 20;
+        }
+        else if (dayPaid > 20 && dayPaid <= 30) {
+            return 30;
+        }
+        else if (dayPaid > 30 && dayPaid <= 36) {
+            return 36;
+        }
+        else if (dayPaid > 36 && dayPaid <= 40) {
+            return 40;
+        }
+        else if (dayPaid > 40 && dayPaid <= 60) {
+            return 60;
+        }
+        else if (dayPaid > 60 && dayPaid <= 100) {
+            return 100;
+        }
+        else if (dayPaid > 100 && dayPaid <= 200) {
+            return 200;
+        }
+        else if (dayPaid > 200 && dayPaid <= 300) {
+            return 300;
+        }
+        else if (dayPaid > 300 && dayPaid <= 400) {
+            return 400;
+        }
+        else if (dayPaid > 400 && dayPaid <= 500) {
+            return 500;
+        }
+        else if (dayPaid > 500 && dayPaid <= 600) {
+            return 600;
+        }
+        else if (dayPaid > 600 && dayPaid <= 700) {
+            return 700;
+        }
+        else if (dayPaid > 700 && dayPaid <= 800) {
+            return 800;
+        }
+        else if (dayPaid > 800 && dayPaid <= 900) {
+            return 900;
+        }
+        else if (dayPaid > 900 && dayPaid <= 1000) {
+            return 1000;
+        }
     }
 
     function calPerDay(kwp) {
@@ -241,18 +304,87 @@
     }
 
     function calPrice(dayPaid) {
-        if (dayPaid > 0 && dayPaid <= 3) {
-            return "<br><h5 style=text-align:left;float:left;>ราคาสำหรับกำลังการผลิต 3 kW (ไฟ 1 เฟส) </h5>" +
+        if (dayPaid == 3) {
+            return "<h5 style=text-align:left;float:left;>ราคาสำหรับกำลังการผลิต 3 kW (ไฟ 1 เฟส)</h5>" +
                 "<h5 style=text-align:right;float:right;><b>145,000</b>  บาท</h5>";
         }
-        else if (dayPaid > 3 && dayPaid <= 5) {
+        else if (dayPaid == 5) {
             return "<h5 style=text-align:left;float:left;>กำลังการผลิต 5 kW (ไฟ 1 เฟส)</h5>" +
                 "<h5 style=text-align:right;float:right;><b>" + "200,000" + "</b>  บาท</h5>" +
                 "<h5 style=text-align:left;float:left;>กำลังการผลิต 5 kW (ไฟ 3 เฟส)</h5>" +
                 "<h5 style=text-align:right;float:right;><b>" + "220,000" + "</b>  บาท</h5>";
         }
-        else {
-            return "";
+        else if (dayPaid == 10) {
+            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 10 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + "330,000" + "</b>  บาท</h5>";
+        }
+        else if (dayPaid == 12) {
+            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 12 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + "390,000" + "</b>  บาท</h5>";
+        }
+        else if (dayPaid == 15) {
+            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 15 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + "450,000" + "</b>  บาท</h5>";
+        }
+        else if (dayPaid == 20) {
+            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 20 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + "550,000" + "</b>  บาท</h5>";
+        }
+        else if (dayPaid == 30) {
+            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 30 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + "835,000" + "</b>  บาท</h5>";
+        }
+        else if (dayPaid == 36) {
+            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 36 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + "990,000" + "</b>  บาท</h5>";
+        }
+        else if (dayPaid == 40) {
+            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 40 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + "1,150,000" + "</b>  บาท</h5>";
+        }
+        else if (dayPaid == 60) {
+            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 60 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + "1,590,000" + "</b>  บาท</h5>";
+        }
+        else if (dayPaid == 100) {
+            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 100 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + "2,500,000" + "</b>  บาท</h5>";
+        }
+        else if (dayPaid == 200) {
+            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 200 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + "5,500,000" + "</b>  บาท</h5>";
+        }
+        else if (dayPaid == 300) {
+            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 300 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + "7,200,000" + "</b>  บาท</h5>";
+        }
+        else if (dayPaid == 400) {
+            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 400 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + "9,600,000" + "</b>  บาท</h5>";
+        }
+        else if (dayPaid == 500) {
+            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 500 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + "11,500,000" + "</b>  บาท</h5>";
+        }
+        else if (dayPaid == 600) {
+            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 600 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + "13,800,000" + "</b>  บาท</h5>";
+        }
+        else if (dayPaid == 700) {
+            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 700 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + "15,400,000" + "</b>  บาท</h5>";
+        }
+        else if (dayPaid == 800) {
+            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 800 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + "17,600,000" + "</b>  บาท</h5>";
+        }
+        else if (dayPaid == 900) {
+            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 900 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + "18,000,000" + "</b>  บาท</h5>";
+        }
+        else if (dayPaid == 1000) {
+            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 1000 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + "20,000,000" + "</b>  บาท</h5>";
         }
     }
 
@@ -260,9 +392,102 @@
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
+    function calPayback(dayPaid, dayUnit) {
+        if (dayPaid == 3) {
+            console.log((145000 / Math.round(calPerYear(dayUnit))).toFixed(2))
+            return "<br><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 3 kW (ไฟ 1 เฟส) ประมาณ</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + Math.round(145000 / (calPerYear(dayUnit))) + "</b>  ปี</h5>";
+        }
+        else if (dayPaid == 5) {
+            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 5 kW (ไฟ 1 เฟส) ประมาณ</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + Math.round(200000 / (calPerYear(dayUnit))) + "</b>  ปี</h5>" +
+                "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 5 kW (ไฟ 3 เฟส) ประมาณ</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + Math.round(220000 / (calPerYear(dayUnit))) + "</b>  ปี</h5>";
+        }
+        else if (dayPaid == 10) {
+            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 10 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + Math.round(330000 / (calPerYear(dayUnit))) + "</b>  ปี</h5>";
+        }
+        else if (dayPaid == 12) {
+            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 12 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + Math.round(390000 / (calPerYear(dayUnit))) + "</b>  ปี</h5>";
+        }
+        else if (dayPaid == 15) {
+            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 15 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + Math.round(450000 / (calPerYear(dayUnit))) + "</b>  ปี</h5>";
+        }
+        else if (dayPaid == 20) {
+            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 20 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + Math.round(550000 / (calPerYear(dayUnit))) + "</b>  ปี</h5>";
+        }
+        else if (dayPaid == 30) {
+            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 30 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + Math.round(835000 / (calPerYear(dayUnit))) + "</b>  ปี</h5>";
+        }
+        else if (dayPaid == 36) {
+            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 36 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + Math.round(990000 / (calPerYear(dayUnit))) + "</b>  ปี</h5>";
+        }
+        else if (dayPaid == 40) {
+            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 40 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + Math.round(1150000 / (calPerYear(dayUnit))) + "</b>  ปี</h5>";
+        }
+        else if (dayPaid == 60) {
+            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 60 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + Math.round(1590000 / (calPerYear(dayUnit))) + "</b>  ปี</h5>";
+        }
+        else if (dayPaid == 100) {
+            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 100 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + Math.round(2500000 / (calPerYear(dayUnit))) + "</b>  ปี</h5>";
+        }
+        else if (dayPaid == 200) {
+            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 200 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + Math.round(5000000 / (calPerYear(dayUnit))) + "</b>  ปี</h5>";
+        }
+        else if (dayPaid == 300) {
+            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 300 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + Math.round(7200000 / (calPerYear(dayUnit))) + "</b>  ปี</h5>";
+        }
+        else if (dayPaid == 400) {
+            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 400 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + Math.round(9600000 / (calPerYear(dayUnit))) + "</b>  ปี</h5>";
+        }
+        else if (dayPaid == 500) {
+            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 500 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + Math.round(11500000 / (calPerYear(dayUnit))) + "</b>  ปี</h5>";
+        }
+        else if (dayPaid == 600) {
+            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 600 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + Math.round(13800000 / (calPerYear(dayUnit))) + "</b>  ปี</h5>";
+        }
+        else if (dayPaid == 700) {
+            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 700 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + Math.round(15400000 / (calPerYear(dayUnit))) + "</b>  ปี</h5>";
+        }
+        else if (dayPaid == 800) {
+            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 800 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + Math.round(17600000 / (calPerYear(dayUnit))) + "</b>  ปี</h5>";
+        }
+        else if (dayPaid == 900) {
+            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 900 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + Math.round(18000000 / (calPerYear(dayUnit))) + "</b>  ปี</h5>";
+        }
+        else if (dayPaid == 1000) {
+            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 1000 kW</h5>" +
+                "<h5 style=text-align:right;float:right;><b>" + Math.round(20000000 / (calPerYear(dayUnit))) + "</b>  ปี</h5>";
+        }
+    }
+
     $("#myForm").submit(function (event) {
         event.preventDefault();
-        $("#myModal").modal('show');
+        var check_ec = document.getElementById('electricCharge').value;
+        var check_ep = document.getElementById('electricPercentage').value;
+        var check_eu = document.getElementById('electricUnit').value;
+        if (check_ec == 0 || check_ep == 0 || check_eu == 0) {
+            alert("กรุณากรอกข้อมูลให้ถูกต้อง")
+        } else {
+            $("#myModal").modal('show');
+        }
     });
 
 </script>
