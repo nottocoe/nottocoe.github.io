@@ -18,6 +18,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
         integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
         crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <style>
     body,
@@ -485,7 +486,11 @@
         var check_ep = document.getElementById('electricPercentage').value;
         var check_eu = document.getElementById('electricUnit').value;
         if (check_ec == 0 || check_ep == 0 || check_eu == 0) {
-            alert("กรุณากรอกข้อมูลให้ถูกต้อง")
+            Swal.fire({
+                icon: 'error',
+                title: 'ข้อมูลผิดพลาด',
+                text: 'กรอกข้อมูลให้ถูกต้อง'
+            })
         } else {
             $("#myModal").modal('show');
         }
