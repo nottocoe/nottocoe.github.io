@@ -186,7 +186,7 @@
         var dayUnit = ((((parseInt(charge) / 30) * percent) / 100) / 4).toFixed(2);
         var dayElec = (parseInt(charge) * percent) / 100;
 
-        var powerUnit = calPerDay(dayUnit);
+        var powerUnit = calculateDayUsed(dayUnit);
         let calibratePowerUnit = calibratePower(powerUnit);
 
         //append text  
@@ -301,31 +301,81 @@
         else if (dayPaid > 900 && dayPaid <= 1000) {
             return 1000;
         }
+        else {
+            Swal.fire({
+                icon: 'error',
+                title: 'ข้อมูลผิดพลาด',
+                text: 'กรอกข้อมูลให้ถูกต้อง'
+            })
+        }
     }
 
-    function calPerDay(kwp) {
-        let elecPerDay;
+    function calculateDayUsed(kwp) {
         var powerConsumption = Math.round(kwp) / 5;
         if (powerConsumption > 0 && powerConsumption <= 3) {
-            elecPerDay = 3;
+            return 3;
         }
         else if (powerConsumption > 3 && powerConsumption <= 5) {
-            elecPerDay = 5
+            return 5;
         }
         else if (powerConsumption > 5 && powerConsumption <= 10) {
-            elecPerDay = 10
+            return 10;
         }
         else if (powerConsumption > 10 && powerConsumption <= 15) {
-            elecPerDay = 15
+            return 15;
         }
         else if (powerConsumption > 15 && powerConsumption <= 20) {
-            elecPerDay = 20
+            return 20;
+        }
+        else if (powerConsumption > 20 && powerConsumption <= 30) {
+            return 30;
+        }
+        else if (powerConsumption > 30 && powerConsumption <= 36) {
+            return 36;
+        }
+        else if (powerConsumption > 36 && powerConsumption <= 40) {
+            return 40;
+        }
+        else if (powerConsumption > 40 && powerConsumption <= 60) {
+            return 60;
+        }
+        else if (powerConsumption > 60 && powerConsumption <= 100) {
+            return 100;
+        }
+        else if (powerConsumption > 100 && powerConsumption <= 200) {
+            return 200;
+        }
+        else if (powerConsumption > 200 && powerConsumption <= 300) {
+            return 300;
+        }
+        else if (powerConsumption > 300 && powerConsumption <= 400) {
+            return 400;
+        }
+        else if (powerConsumption > 400 && powerConsumption <= 500) {
+            return 500;
+        }
+        else if (powerConsumption > 500 && powerConsumption <= 600) {
+            return 600;
+        }
+        else if (powerConsumption > 600 && powerConsumption <= 700) {
+            return 700;
+        }
+        else if (powerConsumption > 700 && powerConsumption <= 800) {
+            return 800;
+        }
+        else if (powerConsumption > 800 && powerConsumption <= 900) {
+            return 900;
+        }
+        else if (powerConsumption > 900 && powerConsumption <= 1000) {
+            return 1000;
         }
         else {
-            elecPerDay = Math.ceil(powerConsumption / 10) * 10;
+            Swal.fire({
+                icon: 'error',
+                title: 'ข้อมูลผิดพลาด',
+                text: 'กรอกข้อมูลให้ถูกต้อง'
+            })
         }
-
-        return elecPerDay;
     }
 
     function calPerMonth(kwp) {
