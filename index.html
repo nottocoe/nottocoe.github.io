@@ -187,7 +187,6 @@
         var dayElec = (parseInt(charge) * percent) / 100;
 
         var powerUnit = calculateDayUsed(dayUnit);
-        let calibratePowerUnit = calibratePower(powerUnit);
 
         //append text  
         strResponse = "<h5>จ่ายค่าไฟฟ้า " + numberWithCommas(charge) + " บาท/เดือน </h5>" +
@@ -215,99 +214,29 @@
             "<h5 style=text-align:left;float:left;>กำลังไฟฟ้าที่ผลิตได้ต่อเดือนโดยประมาณ </h5>" +
             "</div>" +
             "<div class=col-4>" +
-            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas(Math.round(calPerMonth(calibratePowerUnit))) + "</b>  kWh</h5>" +
+            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas(Math.round(calPerMonth(powerUnit))) + "</b>  kWh</h5>" +
             "</div>" +
             "<div class=col-8>" +
             "<h5 style=text-align:left;float:left;>คิดเป็นค่าไฟ </h5>" +
             "</div>" +
             "<div class=col-4>" +
-            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas(Math.round(calPerMonth(calibratePowerUnit) * unit)) + "</b>  บาท</h5>" +
+            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas(Math.round(calPerMonth(powerUnit) * unit)) + "</b>  บาท</h5>" +
             "</div>" +
             "<div class=col-8>" +
             "<h5 style=text-align:left;float:left;>กำลังไฟฟ้าที่ผลิตได้ต่อปีโดยประมาณ </h5>" +
             "</div>" +
             "<div class=col-4>" +
-            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas(Math.round(calPerYear(calibratePowerUnit))) + "</b>  kWh</h5>" +
+            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas(Math.round(calPerYear(powerUnit))) + "</b>  kWh</h5>" +
             "</div>" +
             "<div class=col-8>" +
             "<h5 style=text-align:left;float:left;>คิดเป็นค่าไฟ </h5>" +
             "</div>" +
             "<div class=col-4>" +
-            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas(Math.round(calPerYear(calibratePowerUnit) * unit)) + "</b>  บาท</h5>" +
+            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas(Math.round(calPerYear(powerUnit) * unit)) + "</b>  บาท</h5>" +
             "</div><br><br>" + calPrice(powerUnit) + calPayback(powerUnit, unit) + "</div>";
 
         console.log(strResponse)
         $('#modal-body').html(strResponse);
-    }
-
-    function calibratePower(dayPaid) {
-        if (dayPaid > 0 && dayPaid <= 3) {
-            return 3;
-        }
-        else if (dayPaid > 3 && dayPaid <= 5) {
-            return 5;
-        }
-        else if (dayPaid > 5 && dayPaid <= 10) {
-            return 10;
-        }
-        else if (dayPaid > 10 && dayPaid <= 12) {
-            return 12;
-        }
-        else if (dayPaid > 12 && dayPaid <= 15) {
-            return 15;
-        }
-        else if (dayPaid > 15 && dayPaid <= 20) {
-            return 20;
-        }
-        else if (dayPaid > 20 && dayPaid <= 30) {
-            return 30;
-        }
-        else if (dayPaid > 30 && dayPaid <= 36) {
-            return 36;
-        }
-        else if (dayPaid > 36 && dayPaid <= 40) {
-            return 40;
-        }
-        else if (dayPaid > 40 && dayPaid <= 60) {
-            return 60;
-        }
-        else if (dayPaid > 60 && dayPaid <= 100) {
-            return 100;
-        }
-        else if (dayPaid > 100 && dayPaid <= 200) {
-            return 200;
-        }
-        else if (dayPaid > 200 && dayPaid <= 300) {
-            return 300;
-        }
-        else if (dayPaid > 300 && dayPaid <= 400) {
-            return 400;
-        }
-        else if (dayPaid > 400 && dayPaid <= 500) {
-            return 500;
-        }
-        else if (dayPaid > 500 && dayPaid <= 600) {
-            return 600;
-        }
-        else if (dayPaid > 600 && dayPaid <= 700) {
-            return 700;
-        }
-        else if (dayPaid > 700 && dayPaid <= 800) {
-            return 800;
-        }
-        else if (dayPaid > 800 && dayPaid <= 900) {
-            return 900;
-        }
-        else if (dayPaid > 900 && dayPaid <= 1000) {
-            return 1000;
-        }
-        else {
-            Swal.fire({
-                icon: 'error',
-                title: 'ข้อมูลผิดพลาด',
-                text: 'กรอกข้อมูลให้ถูกต้อง'
-            })
-        }
     }
 
     function calculateDayUsed(kwp) {
