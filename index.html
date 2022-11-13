@@ -185,7 +185,7 @@
         console.log("ELECTRIC UNIT", unit);
         var dayUnit = ((((parseInt(charge) / 30) * percent) / 100) / 4).toFixed(2);
         var dayElec = (parseInt(charge) * percent) / 100;
-        var powerUnit = calculateDayUsed(dayUnit);
+        var powerUnit = calculateDayUsed(dayElec);
 
         //append text  
         strResponse = "<h5>จ่ายค่าไฟฟ้า " + numberWithCommas(charge) + " บาท/เดือน </h5>" +
@@ -239,7 +239,8 @@
     }
 
     function calculateDayUsed(kwp) {
-        var powerConsumption = Math.round(kwp) / 5;
+        var powerConsumption = (Math.round(kwp) / 400);
+        console.log(kwp);
         if (powerConsumption > 0 && powerConsumption <= 3) {
             return 3;
         }
