@@ -427,13 +427,13 @@
 
     function calPayback(powerUnit, unit) {
         if (powerUnit == 3) {
-            return "<div class=col-8><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 3 kW (ไฟ 1 เฟส) ประมาณ</h5></div>" +
+            return "<div class=col-8><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 3 kW (1 เฟส) ประมาณ</h5></div>" +
                 "<div class=col-4><h5 style=text-align:right;float:right;><b>" + (145000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5></div>";
         }
         else if (powerUnit == 5) {
-            return "<div class=col-8><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 5 kW (ไฟ 1 เฟส) ประมาณ</h5></div>" +
+            return "<div class=col-8><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 5 kW (1 เฟส) ประมาณ</h5></div>" +
                 "<div class=col-4><h5 style=text-align:right;float:right;><b>" + (200000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5></div>" +
-                "<div class=col-8><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 5 kW (ไฟ 3 เฟส) ประมาณ</h5></div>" +
+                "<div class=col-8><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 5 kW (3 เฟส) ประมาณ</h5></div>" +
                 "<div class=col-4><h5 style=text-align:right;float:right;><b>" + (220000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5></div>";
         }
         else if (powerUnit == 10) {
