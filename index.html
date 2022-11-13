@@ -72,6 +72,7 @@
 
     .center h5 {
         text-align: center;
+        display: inline-block;
     }
 
     .modal {
@@ -90,7 +91,6 @@
 
     .modal-dialog {
         display: inline-block;
-        text-align: left;
         vertical-align: middle;
     }
 
@@ -100,7 +100,6 @@
     }
 
     .modal-content {
-        text-align: center;
         width: 100%;
     }
 </style>
@@ -147,20 +146,24 @@
     </div>
 
     <div class="modal fade" tabindex="-1" role="dialog" id="myModal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">ผลการคำนวณการติดตั้ง Solar Cell</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="modal-include-body" id="modal-body">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="container-fluid">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">ผลการคำนวณการติดตั้ง Solar Cell</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="modal-include-body" id="modal-body">
 
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">ปิด</button>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">ปิด</button>
-                </div>
             </div>
+
+
         </div>
     </div>
 
@@ -195,18 +198,43 @@
             "<h5>คิดเป็น " + numberWithCommas(Math.round(dayUnit) * 4) + " บาท </h5>" +
             "<h5>ประเทศไทยมีค่าพลังงานแสงอาทิตย์เฉลี่ยรายปีเท่ากับ</h5>" +
             "<h5>4.83 kWh/m<sup>2</sup>-day หรือเทียบได้กับ 4.83 ชั่วโมง/วัน</h5>" + "<br>" +
-            "<h5 style=text-align:left;float:left;>ดังนั้น ขนาดที่เหมาะสมในการติดตั้ง </h5>" +
-            "<h5 style=text-align:right;float:right;><b>" + powerUnit + "</b> kWp (กิโลวัตต์พีค)</h5>" +
-            "<h5 style=text-align:left;float:left;>และใช้พื้นที่ติดตั้งประมาณ</h5>" +
+            "<div class=row>" +
+            "<div class=col-8>" +
+            "<h5 style=text-align:left;float:left;>ขนาดที่เหมาะสมในการติดตั้ง </h5>" +
+            "</div>" +
+            "<div class=col-4>" +
+            "<h5 style=text-align:right;float:right;><b>" + powerUnit + "</b> kWp (กิโลวัตต์พีค)</h5><br>" +
+            "</div>" +
+            "<div class=col-8>" +
+            "<h5 style=text-align:left;float:left;>และใช้พื้นที่ติดตั้งประมาณ </h5>" +
+            "</div>" +
+            "<div class=col-4>" +
             "<h5 style=text-align:right;float:right;><b>" + numberWithCommas((powerUnit) * 7) + "</b> ตารางเมตร</h5>" +
+            "</div>" +
+            "<div class=col-8>" +
             "<h5 style=text-align:left;float:left;>กำลังไฟฟ้าที่ผลิตได้ต่อเดือนโดยประมาณ </h5>" +
+            "</div>" +
+            "<div class=col-4>" +
             "<h5 style=text-align:right;float:right;><b>" + numberWithCommas(Math.round(calPerMonth(calibratePowerUnit))) + "</b>  kWh</h5>" +
+            "</div>" +
+            "<div class=col-8>" +
             "<h5 style=text-align:left;float:left;>คิดเป็นค่าไฟ </h5>" +
+            "</div>" +
+            "<div class=col-4>" +
             "<h5 style=text-align:right;float:right;><b>" + numberWithCommas((calPerMonth(calibratePowerUnit) * unit).toFixed(2)) + "</b>  บาท</h5>" +
+            "</div>" +
+            "<div class=col-8>" +
             "<h5 style=text-align:left;float:left;>กำลังไฟฟ้าที่ผลิตได้ต่อปีโดยประมาณ </h5>" +
-            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas(Math.round(calPerMonth(calibratePowerUnit))) + "</b>  kWh</h5>" +
+            "</div>" +
+            "<div class=col-4>" +
+            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas(Math.round(calPerYear(calibratePowerUnit))) + "</b>  kWh</h5>" +
+            "</div>" +
+            "<div class=col-8>" +
             "<h5 style=text-align:left;float:left;>คิดเป็นค่าไฟ </h5>" +
-            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas((calPerYear(calibratePowerUnit) * unit).toFixed(2)) + "</b>  บาท</h5>" + calPrice(powerUnit) + calPayback(powerUnit, unit)
+            "</div>" +
+            "<div class=col-4>" +
+            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas((calPerYear(calibratePowerUnit) * unit).toFixed(2)) + "</b>  บาท</h5>" +
+            "</div>" + calPrice(powerUnit) + calPayback(powerUnit, unit) + "</div>";
 
         console.log(strResponse)
         $('#modal-body').html(strResponse);
@@ -310,86 +338,86 @@
 
     function calPrice(dayPaid) {
         if (dayPaid == 3) {
-            return "<h5 style=text-align:left;float:left;>ราคาสำหรับกำลังการผลิต 3 kW (ไฟ 1 เฟส)</h5>" +
-                "<h5 style=text-align:right;float:right;><b>145,000</b>  บาท</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>ราคาสำหรับกำลังการผลิต 3 kW (ไฟ 1 เฟส)</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>145,000</b>  บาท</h5></div>";
         }
         else if (dayPaid == 5) {
-            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 5 kW (ไฟ 1 เฟส)</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + "200,000" + "</b>  บาท</h5>" +
-                "<h5 style=text-align:left;float:left;>กำลังการผลิต 5 kW (ไฟ 3 เฟส)</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + "220,000" + "</b>  บาท</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>กำลังการผลิต 5 kW (ไฟ 1 เฟส)</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + "200,000" + "</b>  บาท</h5></div>" +
+                "<div class=col-8><h5 style=text-align:left;float:left;>กำลังการผลิต 5 kW (ไฟ 3 เฟส)</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + "220,000" + "</b>  บาท</h5></div>";
         }
         else if (dayPaid == 10) {
-            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 10 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + "330,000" + "</b>  บาท</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>กำลังการผลิต 10 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + "330,000" + "</b>  บาท</h5></div>";
         }
         else if (dayPaid == 12) {
-            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 12 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + "390,000" + "</b>  บาท</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>กำลังการผลิต 12 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + "390,000" + "</b>  บาท</h5></div>";
         }
         else if (dayPaid == 15) {
-            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 15 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + "450,000" + "</b>  บาท</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>กำลังการผลิต 15 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + "450,000" + "</b>  บาท</h5></div>";
         }
         else if (dayPaid == 20) {
-            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 20 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + "550,000" + "</b>  บาท</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>กำลังการผลิต 20 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + "550,000" + "</b>  บาท</h5></div>";
         }
         else if (dayPaid == 30) {
-            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 30 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + "835,000" + "</b>  บาท</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>กำลังการผลิต 30 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + "835,000" + "</b>  บาท</h5></div>";
         }
         else if (dayPaid == 36) {
-            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 36 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + "990,000" + "</b>  บาท</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>กำลังการผลิต 36 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + "990,000" + "</b>  บาท</h5></div>";
         }
         else if (dayPaid == 40) {
-            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 40 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + "1,150,000" + "</b>  บาท</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>กำลังการผลิต 40 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + "1,150,000" + "</b>  บาท</h5></div>";
         }
         else if (dayPaid == 60) {
-            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 60 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + "1,590,000" + "</b>  บาท</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>กำลังการผลิต 60 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + "1,590,000" + "</b>  บาท</h5></div>";
         }
         else if (dayPaid == 100) {
-            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 100 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + "2,500,000" + "</b>  บาท</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>กำลังการผลิต 100 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + "2,500,000" + "</b>  บาท</h5></div>";
         }
         else if (dayPaid == 200) {
-            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 200 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + "5,000,000" + "</b>  บาท</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>กำลังการผลิต 200 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + "5,000,000" + "</b>  บาท</h5></div>";
         }
         else if (dayPaid == 300) {
-            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 300 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + "7,200,000" + "</b>  บาท</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>กำลังการผลิต 300 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + "7,200,000" + "</b>  บาท</h5></div>";
         }
         else if (dayPaid == 400) {
-            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 400 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + "9,600,000" + "</b>  บาท</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>กำลังการผลิต 400 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + "9,600,000" + "</b>  บาท</h5></div>";
         }
         else if (dayPaid == 500) {
-            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 500 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + "11,500,000" + "</b>  บาท</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>กำลังการผลิต 500 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + "11,500,000" + "</b>  บาท</h5></div>";
         }
         else if (dayPaid == 600) {
-            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 600 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + "13,800,000" + "</b>  บาท</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>กำลังการผลิต 600 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + "13,800,000" + "</b>  บาท</h5></div>";
         }
         else if (dayPaid == 700) {
-            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 700 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + "15,400,000" + "</b>  บาท</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>กำลังการผลิต 700 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + "15,400,000" + "</b>  บาท</h5></div>";
         }
         else if (dayPaid == 800) {
-            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 800 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + "17,600,000" + "</b>  บาท</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>กำลังการผลิต 800 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + "17,600,000" + "</b>  บาท</h5></div>";
         }
         else if (dayPaid == 900) {
-            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 900 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + "18,000,000" + "</b>  บาท</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>กำลังการผลิต 900 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + "18,000,000" + "</b>  บาท</h5></div>";
         }
         else if (dayPaid == 1000) {
-            return "<h5 style=text-align:left;float:left;>กำลังการผลิต 1000 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + "20,000,000" + "</b>  บาท</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>กำลังการผลิต 1000 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + "20,000,000" + "</b>  บาท</h5></div>";
         }
     }
 
@@ -399,86 +427,86 @@
 
     function calPayback(powerUnit, unit) {
         if (powerUnit == 3) {
-            return "<br><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 3 kW (ไฟ 1 เฟส) ประมาณ</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + (145000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 3 kW (ไฟ 1 เฟส) ประมาณ</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + (145000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5></div>";
         }
         else if (powerUnit == 5) {
-            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 5 kW (ไฟ 1 เฟส) ประมาณ</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + (200000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5>" +
-                "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 5 kW (ไฟ 3 เฟส) ประมาณ</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + (220000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 5 kW (ไฟ 1 เฟส) ประมาณ</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + (200000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5></div>" +
+                "<div class=col-8><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 5 kW (ไฟ 3 เฟส) ประมาณ</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + (220000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5></div>";
         }
         else if (powerUnit == 10) {
-            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 10 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + (330000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 10 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + (330000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5></div>";
         }
         else if (powerUnit == 12) {
-            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 12 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + (390000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 12 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + (390000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5></div>";
         }
         else if (powerUnit == 15) {
-            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 15 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + (450000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 15 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + (450000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5></div>";
         }
         else if (powerUnit == 20) {
-            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 20 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + (550000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 20 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + (550000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5></div>";
         }
         else if (powerUnit == 30) {
-            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 30 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + (835000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 30 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + (835000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5></div>";
         }
         else if (powerUnit == 36) {
-            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 36 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + (990000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 36 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + (990000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5></div>";
         }
         else if (powerUnit == 40) {
-            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 40 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + (1150000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 40 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + (1150000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5></div>";
         }
         else if (powerUnit == 60) {
-            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 60 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + (1590000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 60 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + (1590000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5></div>";
         }
         else if (powerUnit == 100) {
-            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 100 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + (2500000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 100 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + (2500000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5></div>";
         }
         else if (powerUnit == 200) {
-            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 200 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + (5000000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 200 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + (5000000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5></div>";
         }
         else if (powerUnit == 300) {
-            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 300 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + (7200000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 300 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + (7200000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5></div>";
         }
         else if (powerUnit == 400) {
-            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 400 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + (9600000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 400 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + (9600000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5></div>";
         }
         else if (powerUnit == 500) {
-            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 500 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + (11500000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 500 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + (11500000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5></div>";
         }
         else if (powerUnit == 600) {
-            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 600 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + (13800000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 600 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + (13800000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5></div>";
         }
         else if (powerUnit == 700) {
-            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 700 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + (15400000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 700 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + (15400000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5></div>";
         }
         else if (powerUnit == 800) {
-            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 800 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + (17600000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 800 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + (17600000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5></div>";
         }
         else if (powerUnit == 900) {
-            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 900 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + (18000000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 900 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + (18000000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5></div>";
         }
         else if (powerUnit == 1000) {
-            return "<h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 1000 kW</h5>" +
-                "<h5 style=text-align:right;float:right;><b>" + (20000000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5>";
+            return "<div class=col-8><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 1000 kW</h5></div>" +
+                "<div class=col-4><h5 style=text-align:right;float:right;><b>" + (20000000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5></div>";
         }
     }
 
