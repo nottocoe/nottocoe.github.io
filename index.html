@@ -185,7 +185,6 @@
         console.log("ELECTRIC UNIT", unit);
         var dayUnit = ((((parseInt(charge) / 30) * percent) / 100) / 4).toFixed(2);
         var dayElec = (parseInt(charge) * percent) / 100;
-
         var powerUnit = calculateDayUsed(dayUnit);
 
         //append text  
