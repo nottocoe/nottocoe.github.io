@@ -205,7 +205,7 @@
             "<h5 style=text-align:left;float:left;>กำลังไฟฟ้าที่ผลิตได้ต่อปีโดยประมาณ </h5>" +
             "<h5 style=text-align:right;float:right;><b>" + numberWithCommas(Math.round(calPerYear(powerUnit))) + 
             "<h5 style=text-align:left;float:left;>คิดเป็นค่าไฟ </h5>" +
-            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas((calPerYear(powerUnit) * unit).toFixed(2)) + "</b>  บาท</h5>" + "</b>  kWh</h5>" + calPrice(powerUnit) + calPayback(powerUnit, dayUnit)
+            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas((calPerYear(powerUnit) * unit).toFixed(2)) + "</b>  บาท</h5>" + calPrice(powerUnit) + calPayback(powerUnit, dayUnit)
 
         console.log(strResponse)
         $('#modal-body').html(strResponse);
