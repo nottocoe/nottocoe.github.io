@@ -199,11 +199,11 @@
             "<h5 style=text-align:left;float:left;>และใช้พื้นที่ติดตั้งประมาณ</h5>" +
             "<h5 style=text-align:right;float:right;><b>" + numberWithCommas((powerUnit) * 7) + "</b> ตารางเมตร</h5>" +
             "<h5 style=text-align:left;float:left;>กำลังไฟฟ้าที่ผลิตได้ต่อเดือนโดยประมาณ </h5>" +
-            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas(Math.round(calPerMonth(dayUnit))) + "</b>  kWh</h5>" +
+            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas(Math.round(calPerMonth(powerUnit))) + "</b>  kWh</h5>" +
             "<h5 style=text-align:left;float:left;>คิดเป็นค่าไฟ </h5>" +
             "<h5 style=text-align:right;float:right;><b>" + numberWithCommas((calPerMonth(dayUnit) * unit).toFixed(2)) + "</b>  บาท</h5>" +
             "<h5 style=text-align:left;float:left;>กำลังไฟฟ้าที่ผลิตได้ต่อปีโดยประมาณ </h5>" +
-            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas(Math.round(calPerYear(dayUnit))) + "</b>  kWh</h5>" + calPrice(powerUnit) + calPayback(powerUnit, dayUnit)
+            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas(Math.round(calPerYear(powerUnit))) + "</b>  kWh</h5>" + calPrice(powerUnit) + calPayback(powerUnit, dayUnit)
 
         console.log(strResponse)
         $('#modal-body').html(strResponse);
