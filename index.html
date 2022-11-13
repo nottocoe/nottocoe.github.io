@@ -234,7 +234,7 @@
             "</div>" +
             "<div class=col-4>" +
             "<h5 style=text-align:right;float:right;><b>" + numberWithCommas(Math.round(calPerYear(calibratePowerUnit) * unit)) + "</b>  บาท</h5>" +
-            "</div>" + calPrice(powerUnit) + calPayback(powerUnit, unit) + "</div>";
+            "</div><br><br>" + calPrice(powerUnit) + calPayback(powerUnit, unit) + "</div>";
 
         console.log(strResponse)
         $('#modal-body').html(strResponse);
