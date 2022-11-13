@@ -180,10 +180,11 @@
         console.log("ELECTRIC CHARGE: ", charge);
         console.log("DAY PERCENTAGE: ", percent);
         console.log("ELECTRIC UNIT", unit);
-        var dayUnit = ((((parseInt(charge) / 30) * percent) / 100) / 4).toFixed(2); // charge / 400
+        var dayUnit = ((((parseInt(charge) / 30) * percent) / 100) / 4).toFixed(2);
         var dayElec = (parseInt(charge) * percent) / 100;
+
         var powerUnit = calPerDay(dayUnit);
-        powerUnit = calibratePower(powerUnit);
+        let calibratePowerUnit = calibratePower(powerUnit);
 
         //append text  
         strResponse = "<h5>จ่ายค่าไฟฟ้า " + numberWithCommas(charge) + " บาท/เดือน </h5>" +
@@ -199,13 +200,13 @@
             "<h5 style=text-align:left;float:left;>และใช้พื้นที่ติดตั้งประมาณ</h5>" +
             "<h5 style=text-align:right;float:right;><b>" + numberWithCommas((powerUnit) * 7) + "</b> ตารางเมตร</h5>" +
             "<h5 style=text-align:left;float:left;>กำลังไฟฟ้าที่ผลิตได้ต่อเดือนโดยประมาณ </h5>" +
-            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas(Math.round(calPerMonth(powerUnit))) + "</b>  kWh</h5>" +
+            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas(Math.round(calPerMonth(calibratePowerUnit))) + "</b>  kWh</h5>" +
             "<h5 style=text-align:left;float:left;>คิดเป็นค่าไฟ </h5>" +
-            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas((calPerMonth(powerUnit) * unit).toFixed(2)) + "</b>  บาท</h5>" +
+            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas((calPerMonth(calibratePowerUnit) * unit).toFixed(2)) + "</b>  บาท</h5>" +
             "<h5 style=text-align:left;float:left;>กำลังไฟฟ้าที่ผลิตได้ต่อปีโดยประมาณ </h5>" +
-            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas(Math.round(calPerYear(powerUnit))) + "</b>  kWh</h5>" +
+            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas(Math.round(calPerMonth(calibratePowerUnit))) + "</b>  kWh</h5>" +
             "<h5 style=text-align:left;float:left;>คิดเป็นค่าไฟ </h5>" +
-            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas((calPerYear(powerUnit) * unit).toFixed(2)) + "</b>  บาท</h5>" + calPrice(powerUnit) + calPayback(powerUnit, unit)
+            "<h5 style=text-align:right;float:right;><b>" + numberWithCommas((calPerYear(calibratePowerUnit) * unit).toFixed(2)) + "</b>  บาท</h5>" + calPrice(powerUnit) + calPayback(powerUnit, unit)
 
         console.log(strResponse)
         $('#modal-body').html(strResponse);
@@ -397,8 +398,6 @@
     }
 
     function calPayback(powerUnit, unit) {
-        console.log("POWER UNIT: " + calPerYear(powerUnit * unit))
-        // console.log("PAYBACK: ", (145000 / (calPerYear(powerUnit))).toFixed(1))
         if (powerUnit == 3) {
             return "<br><h5 style=text-align:left;float:left;>ระยะเวลาคืนทุนของ 3 kW (ไฟ 1 เฟส) ประมาณ</h5>" +
                 "<h5 style=text-align:right;float:right;><b>" + (145000 / (calPerYear(powerUnit) * unit)).toFixed(1) + "</b>  ปี</h5>";
